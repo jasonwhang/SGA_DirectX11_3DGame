@@ -37,4 +37,7 @@ typedef unsigned int uint;
 #define SAFE_DELETE_ARRAY(p)	{if (p) { delete[] (p); (p) = nullptr; } }
 
 // FrameWork
+#include "./Vertex/Vertex.h"
+
 #include "./System/Settings.h"
+#include "./System/Graphics.h"

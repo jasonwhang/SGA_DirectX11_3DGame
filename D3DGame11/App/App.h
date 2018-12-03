@@ -13,6 +13,7 @@ public:
 	virtual void Render() = 0;
 	virtual void Destory() = 0;
 
-private:
+protected:
 	class Window* window;
+	class Graphics* graphics;
 };
