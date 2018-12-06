@@ -15,9 +15,6 @@ LRESULT CALLBACK WndProc
 	switch (message)
 	{
 	case WM_CLOSE:
-	case WM_KEYDOWN:
-		switch (wParam)
-	case VK_ESCAPE:
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
@@ -34,6 +31,8 @@ Window::Window()
 
 Window::~Window()
 {
+	DestroyWindow(Settings::Get().GetHandle());
+	UnregisterClass(Settings::Get().GetAppName().c_str(), Settings::Get().GetHInstance());
 }
 
 void Window::Initialize()

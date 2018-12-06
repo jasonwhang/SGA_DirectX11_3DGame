@@ -6,7 +6,7 @@
 class Window final
 {
 public:
-	 Window();
+	Window();
 	virtual ~Window();
 	void Initialize();
 

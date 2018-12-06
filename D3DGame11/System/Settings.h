@@ -30,7 +30,7 @@ public:
 	void SetHInstance(HINSTANCE hInstance) { this->hInstance = hInstance; }
 	void SetHandle(HWND handle) { this->handle = handle; }
 	void SetWidth(const float& width) { this->width = width; }
-	void SetHeight(const float& height ) { this->height = height; }
+	void SetHeight(const float& height) { this->height = height; }
 
 	// 싱글턴이기때문에 외부에서 생성자는 접근 못하도록 막아야 한다.
 private:
@@ -40,7 +40,7 @@ private:
 	// a = 10;
 	// 생성자 초기화 방법 2가지
 	// 초기화 목록 리스트
-	Settings() 
+	Settings()
 		:appName(L""),
 		hInstance(nullptr),
 		handle(nullptr),
