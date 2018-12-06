@@ -148,7 +148,7 @@ void Game::Initialize()
 	D3D11_INPUT_ELEMENT_DESC layoutDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	// 배열 크기에 대한 정보
@@ -224,6 +224,35 @@ void Game::Initialize()
 	);
 	assert(SUCCEEDED(hr));
 #pragma endregion
+
+#pragma region Create BlendState
+
+	D3D11_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(D3D11_BLEND_DESC));
+	// AlphaToCoverageEnable는 알파값을 절단하듯이 자르는 역할이 필요할 때 true로 쓴다.
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.IndependentBlendEnable = false;
+	// RenderTarget은 8개까지 가능하므로 0~7번까지 사용 가능하다.
+	blendDesc.RenderTarget[0].BlendEnable = true;
+
+	// Blend는 부드럽게 알파값이 빠져야 하는 경우에 사용한다.(혼합공식)
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA; // 뒤에 있는 색깔
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA; // 앞에 있는 색깔
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	hr = graphics->GetDevice()->CreateBlendState
+	(
+		&blendDesc,
+		&blendState
+	);
+	assert(SUCCEEDED(hr));
+
+#pragma endregion
 }
 
 void Game::Update()
@@ -240,9 +269,10 @@ void Game::Update()
 	//);
 
 	// 행렬의 원소에 접근하는 방법 (1,1)에 접근하겠다.
-	world._11 = 100;
-	world._22 = 100;
+	world._11 = 500;
+	world._22 = 500;
 
+	// Transpose 행우선인 DirectX를 열우선인 Shader로 바꾸어주는 함수(직교행렬)
 	D3DXMatrixTranspose(&data.World, &world);
 	D3DXMatrixTranspose(&data.View, &camera->GetViewMatrix());
 	D3DXMatrixTranspose(&data.Projection, &camera->GetProjecttionMatrix());
@@ -317,6 +347,12 @@ void Game::Render()
 		1, // texture를 1개 넣는다
 		&srv
 	);
+
+#pragma endregion
+
+#pragma region Pipeline_OM
+
+	graphics->GetDeviceContext()->OMSetBlendState(blendState, nullptr, 0xffffffff);
 
 #pragma endregion
 

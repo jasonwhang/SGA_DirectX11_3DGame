@@ -58,4 +58,8 @@ private:
 	// View는 Texture이다.
 	// Texture의 원본은 ID3D11Texture2D이지만 이것을 Shader에 넣어주어야 하므로 아래것을 쓴다.
 	ID3D11ShaderResourceView* srv;
+
+	// Blend State
+	// 이 변수는 파이프라인의 OM에 들어간다.
+	ID3D11BlendState* blendState;
 };
