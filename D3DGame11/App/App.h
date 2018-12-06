@@ -1,5 +1,7 @@
 #pragma once
 
+// App은 부모클래스이다(Game이 자식클래스)
+
 class App
 {
 public:
